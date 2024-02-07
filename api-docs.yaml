@@ -1,0 +1,460 @@
+swagger: "2.0"
+info:
+    description: "Pusdatin Challenge API documentation"
+    version: "1.0.0"
+    title: "Pusdatin Challenge API"
+host: "localhost:3000"
+
+tags:
+    - name: "user"
+    - name: "product"
+schemes:
+    - "http"
+    
+paths:
+    # --- USER
+    /api/user/login:
+        post:
+            tags:
+                - "user"
+            summary: "User login"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "body"
+                  in: "body"
+                  required: true
+                  schema:
+                      type: "object"
+                      required:
+                          - "username"
+                          - "password"
+                      properties:
+                          username:
+                              type: "string"
+                              example: "john_dae"
+                          password:
+                              type: "string"
+                              example: "123456"
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/UserSchema"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    /api/user/register:
+        post:
+            tags:
+                - "user"
+            summary: "User register"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "body"
+                  in: "body"
+                  description: "The email for register"
+                  required: true
+                  schema:
+                      type: "object"
+                      required:
+                            - "FirstName"
+                            - "LastName"
+                            - "email"
+                            - "username"
+                            - "password"
+                      properties:
+                            FirstName:
+                              type: "string"
+                              example: "john"
+                            LastName:
+                              type: "string"
+                              example: "dae"
+                            email:
+                              type: "string"
+                              example: "johndae@gmail.com"
+                            username:
+                              type: "string"
+                              example: "john_dae"
+                            password:
+                              type: "string"
+                              example: "123456"
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/UserSchema"
+
+                "400":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    /api/user/update/{userId}:
+        put:
+            tags:
+                - "user"
+            summary: "User update"
+            description: ""
+            parameters:
+                - name: "userId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+                - name: "body"
+                  in: "body"
+                  required: true
+                  schema:
+                        type: "object"
+                        required:
+                            - "email"
+                            - "username"
+                        properties:
+                            FirstName:
+                                type: "string"
+                                example: "John"
+                            LastName:
+                                type: "string"
+                                example: "Dae"
+                            email:
+                                type: "string"
+                                example: "member@gmail.com"
+                            username:
+                                type: "string"
+                                example: "username" 
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/UserSchema"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    /api/user/delete/{userId}:
+        delete:
+            tags:
+                - "user"
+            summary: "User delete"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "userId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                    default: true
+                                error:
+                                    type: "integer"
+                                    default: 0
+                                message:
+                                    type: "string"
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    # --- PRODUCT
+    # ADD PRODUCT
+    /api/product/create:
+        post:
+            tags:
+                - "product"
+            summary: "Add Product"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "body"
+                  in: "body"
+                  required: true
+                  schema:
+                    type: "object"
+                    required:
+                        - "name"
+                        - "description"
+                        - "userId"
+                    properties:
+                        name:
+                            type: "string"
+                            example: "product a"
+                        description:
+                            type: "string"
+                            example: "description of product a"
+                        userId:
+                            type: "integer"
+                            example: 1
+
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                error:
+                                    type: "integer"
+                                message:
+                                    type: "string"
+                                data:
+                                    type: "object"
+                                    $ref: "#/definitions/ProductProps"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+    
+    # SHOW ALL PRODUCTS
+    /api/product/list:
+        get:
+            tags:
+                - "product"
+            summary: "Show All Products"
+            description: ""
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                error:
+                                    type: "integer"
+                                message:
+                                    type: "string"
+                                data:
+                                    type: "object"
+                                    $ref: "#/definitions/ProductProps"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    # FIND PRODUCT BY ID
+    /api/product/findOne/{productId}:
+        get:
+            tags:
+                - "product"
+            summary: "Find One Data by Id"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "productId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+            
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                error:
+                                    type: "integer"
+                                message:
+                                    type: "string"
+                                data:
+                                    type: "object"
+                                    $ref: "#/definitions/ProductProps"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    # UPDATE PRODUCT BY ID
+    /api/product/update/{productId}:
+        put:
+            tags:
+                - "product"
+            summary: "Update Product by Id"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "productId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+                - name: "body"
+                  in: "body"
+                  required: true
+                  schema:
+                    type: "object"
+                    required:
+                        - "name"
+                        - "description"
+                        - "userId"
+                    properties:
+                        name:
+                            type: "string"
+                            example: "collection data a"
+                        description:
+                            type: "string"
+                            example: "description of collection data a"
+                        userId:
+                            type: "integer"
+                            example: 1
+
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                error:
+                                    type: "integer"
+                                message:
+                                    type: "string"
+                                data:
+                                    type: "object"
+                                    $ref: "#/definitions/ProductProps"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    # DELETE PRODUCT BY ID
+    /api/product/delete/{productId}:
+        delete:
+            tags:
+                - "product"
+            summary: "Delete Product by Id"
+            description: ""
+            produces: 
+                - "application/json"
+            parameters:
+                - name: "productId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+            
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                error:
+                                    type: "integer"
+                                message:
+                                    type: "string"
+                                data:
+                                    type: "object"
+                                    $ref: "#/definitions/ProductProps"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+definitions:
+    UserSchema:
+        schema:
+            items:
+                type: "object"
+                properties:
+                    success:
+                        type: "boolean"
+                    error:
+                        type: "integer"
+                    message:
+                        type: "string"
+                    data:
+                        type: "object"
+                        $ref: "#/definitions/UserProps"
+    
+    UserProps:
+        properties:
+            id:
+                type: "integer"
+            FirstName:
+                type: "string"
+            LastName:
+                type: "string"
+            email:
+                type: "string"
+            username:
+                type: "string"
+            password:
+                type: "string"
+            createdAt:
+                type: "string"
+                format: "date-time"
+            updatedAt:
+                type: "string"
+                format: "date-time"
+
+    ProductSchema:
+        schema:
+            items:
+                type: "object"
+                properties:
+                    success:
+                        type: "boolean"
+                    error:
+                        type: "integer"
+                    message:
+                        type: "string"
+                    data:
+                        type: "object"
+                        $ref: "#/definitions/ProductProps"
+    ProductProps:
+        properties:
+            id:
+                type: "integer"
+            name:
+                type: "string"
+            description:
+                type: "string"
+            userId:
+                type: "integer"
+            createdAt:
+                type: "string"
+                format: "date-time"
+            updatedAt:
+                type: "string"
+                format: "date-time"
+
+    errorSchema:
+        schema:
+            items:
+                type: "object"
+                properties:
+                    success:
+                        type: "boolean"
+                        default: false
+                    error:
+                        type: "object"
+                        default: {}
+                    message:
+                        type: "string"
+                    data:
+                        type: "boolean"
+                        default: null
